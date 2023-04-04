@@ -4,13 +4,12 @@ const UserSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please provide user name!'],
+      required: [true, 'Please provide username!'],
       minlength: 3,
-      maxlength: 50,
+      maxlength: 30,
     },
     profilePic: {
       type: String,
-      default: 'profile.png',
     },
   },
   {

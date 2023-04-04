@@ -1,25 +1,35 @@
 import { User } from '../models/User.js';
 
-export const createUsersToMongo = async (req, res) => {
+const createUsersToMongo = async () => {
   try {
-    const { name, profilePic } = req.body;
-    const user = await User.create({
-      name,
-      profilePic,
+    const response = await fetch(
+      'https://dummyjson.com/users?select=firstName,lastName,image&limit=10'
+    );
+    const usersData = await response.json();
+    const parseDataForDB = await usersData.users.map((user) => {
+      return {
+        name: `${user.firstName} ${user.lastName}`,
+        profilePic: user.image,
+      };
     });
-    res.status(200).json({ success: true, data: user });
+    const users = await User.insertMany(parseDataForDB);
+    return users;
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, msg: error });
+    return error.message;
   }
 };
+
 export const getUsersFromMongo = async (req, res) => {
   try {
-    const users = await User.find();
+    let users = await User.find();
+    if (users.length < 1) {
+      users = await createUsersToMongo();
+      if (typeof users === 'string') {
+        throw new Error(users);
+      }
+    }
     res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ success: false, msg: 'Something went wrong! Please try again.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.toString() });
   }
 };
