@@ -1,13 +1,12 @@
-import express from 'express';
-import { config } from 'dotenv';
-import { connectDB } from './databases/mongo.js';
-import { router } from './routes/user.route.js';
-import { notFound } from './middlewares/notFound.js';
+const express = require('express');
+require('dotenv').config();
 
-config();
+const { connectDB } = require('./databases/mongo');
+const router = require('./routes/user.route');
+const notFound = require('./middlewares/notFound');
+const { connectMySQL } = require('./databases/mysql');
 
 const app = express();
-// app.use(express.json());
 
 app.use(router);
 app.use(notFound);
@@ -16,6 +15,7 @@ const PORT = process.env.PORT;
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
+    await connectMySQL();
     app.listen(PORT, console.log(`Listening to port ${PORT}`));
   } catch (error) {
     console.log(error);

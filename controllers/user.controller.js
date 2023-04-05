@@ -1,35 +1,36 @@
-import { User } from '../models/User.js';
+const MongoUser = require('../models/User');
+const { sequelize, Sequelize } = require('../models/mysql/models/index');
 
-const createUsersToMongo = async () => {
-  try {
-    const response = await fetch(
-      'https://dummyjson.com/users?select=firstName,lastName,image&limit=10'
-    );
-    const usersData = await response.json();
-    const parseDataForDB = await usersData.users.map((user) => {
-      return {
-        name: `${user.firstName} ${user.lastName}`,
-        profilePic: user.image,
-      };
-    });
-    const users = await User.insertMany(parseDataForDB);
-    return users;
-  } catch (error) {
-    return error.message;
-  }
-};
+const MySQLUser = require('../models/mysql/models/user')(
+  sequelize,
+  Sequelize.DataTypes
+);
 
-export const getUsersFromMongo = async (req, res) => {
+const { getDummyUserData } = require('../utils/fetchUserData');
+
+const getUsersFromMongo = async (req, res) => {
   try {
-    let users = await User.find();
+    let users = await MongoUser.find();
     if (users.length < 1) {
-      users = await createUsersToMongo();
-      if (typeof users === 'string') {
-        throw new Error(users);
-      }
+      const parseDataForDB = await getDummyUserData();
+      users = await MongoUser.insertMany(parseDataForDB);
     }
-    res.status(200).json({ success: true, data: users });
+    res
+      .status(200)
+      .json({ success: true, noOfHits: users.length, data: users });
   } catch (err) {
     res.status(500).json({ success: false, error: err.toString() });
   }
 };
+const getUsersFromMySQL = async (req, res) => {
+  try {
+    const users = await MySQLUser.findAll();
+    res
+      .status(200)
+      .json({ success: true, noOfHits: users.length, data: users });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err });
+  }
+};
+
+module.exports = { getUsersFromMongo, getUsersFromMySQL };

@@ -1,8 +1,12 @@
-import { Router } from 'express';
-import { getUsersFromMongo } from '../controllers/user.controller.js';
+const { Router } = require('express');
+const {
+  getUsersFromMongo,
+  getUsersFromMySQL,
+} = require('../controllers/user.controller');
 
 const router = Router();
 
+router.route('/v1/user').get(getUsersFromMySQL);
 router.route('/v2/user').get(getUsersFromMongo);
 
-export { router };
+module.exports = router;
