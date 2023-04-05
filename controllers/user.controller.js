@@ -1,4 +1,4 @@
-const MongoUser = require('../models/User');
+const MongoUser = require('../models/mongo/User');
 const { sequelize, Sequelize } = require('../models/mysql/models/index');
 
 const MySQLUser = require('../models/mysql/models/user')(
@@ -17,7 +17,12 @@ const getUsersFromMongo = async (req, res) => {
     }
     res
       .status(200)
-      .json({ success: true, noOfHits: users.length, data: users });
+      .json({
+        success: true,
+        noOfHits: users.length,
+        store: 'MongoDB',
+        data: users,
+      });
   } catch (err) {
     res.status(500).json({ success: false, error: err.toString() });
   }
@@ -27,7 +32,12 @@ const getUsersFromMySQL = async (req, res) => {
     const users = await MySQLUser.findAll();
     res
       .status(200)
-      .json({ success: true, noOfHits: users.length, data: users });
+      .json({
+        success: true,
+        noOfHits: users.length,
+        store: 'MySQL',
+        data: users,
+      });
   } catch (err) {
     res.status(500).json({ success: false, error: err });
   }
