@@ -1,0 +1,22 @@
+#### ALL MySQL Migration queries/scripts
+
+### Necessary scripts after npm install and before npm run dev.
+
+## Create mysqldb
+npm run create:mysqldb <db_name>
+
+Note: Please add and configure config.json file at models/mysql/config directory 
+using config.json-template. Database name at config.json must match the created database name.
+
+## Migrate mysqldb
+npm run migrate:mysql
+
+## Seed mysqldb with dummydata
+npm run seed:mysql
+
+------------------------------------------------------------------------------------------------
+
+### Miscellaneous
+
+## Revert to most recent migration
+npm run migrate:mysql:undo
