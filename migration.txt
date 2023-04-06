@@ -3,16 +3,16 @@
 ### Necessary scripts after npm install and before npm run dev.
 
 ## Create mysqldb
-npm run create:mysqldb <db_name>
+1. npm run create:mysqldb <db_name>
 
 Note: Please add and configure config.json file at models/mysql/config directory 
-using config.json-template. Database name at config.json must match the created database name.
+using config.json-template. Use same database name from first script
 
 ## Migrate mysqldb
-npm run migrate:mysql
+2. npm run migrate:mysql
 
 ## Seed mysqldb with dummydata
-npm run seed:mysql
+3. npm run seed:mysql
 
 ------------------------------------------------------------------------------------------------
 
