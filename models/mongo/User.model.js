@@ -4,9 +4,7 @@ const UserSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, 'Please provide username!'],
-      minlength: 3,
-      maxlength: 30,
+      required: true,
     },
     profilePic: {
       type: String,
@@ -14,6 +12,7 @@ const UserSchema = new Schema(
   },
   {
     timestamps: true,
+    collection: 'User',
   }
 );
 UserSchema.set('toJSON', {

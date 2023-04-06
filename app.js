@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+
 const { connectDB } = require('./databases/mongo');
 const router = require('./routes/user.route');
 const notFound = require('./middlewares/notFound');
@@ -17,7 +18,7 @@ const limiter = rateLimit({
 
 const app = express();
 
-app.use(helmet);
+app.use(helmet());
 app.use(limiter);
 
 app.use(router);

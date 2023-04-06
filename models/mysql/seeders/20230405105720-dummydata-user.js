@@ -1,6 +1,6 @@
 'use strict';
 
-const getDummyUserData = require('../../../utils/fetchUserData');
+const { getDummyUserData } = require('../../../utils/loadUserData');
 const { sequelize, Sequelize } = require('../models/index');
 const User = require('../models/user')(sequelize, Sequelize.DataTypes);
 

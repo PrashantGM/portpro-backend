@@ -1,4 +1,5 @@
 const models = require('../../databases/cassandra');
+const { insertToCassandra } = require('../../utils/loadUserData');
 
 const User = models.loadSchema('User', {
   fields: {
@@ -16,11 +17,6 @@ const User = models.loadSchema('User', {
   },
   key: [['id'], 'createdAt'],
   clustering_order: { createdAt: 'asc' },
-  // materialized_views: {
-  //       view_name1: {
-  //           select: ["id","name","profilePic"],
-  //           key : [["id"],"created"],
-  //       },
   indexes: ['name'],
   options: {
     timestamps: true,
@@ -30,10 +26,14 @@ const User = models.loadSchema('User', {
   },
 });
 
-User.syncDB((err, result) => {
+User.syncDB(async (err, result) => {
   if (err) {
     console.error('Error syncing User table', err);
   } else {
+    let users = await User.findAsync({});
+    if (users.length < 1) {
+      await insertToCassandra(models, User);
+    }
     console.log('User table synced');
   }
 });
