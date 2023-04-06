@@ -7,6 +7,7 @@ const { connectDB } = require('./databases/mongo');
 const router = require('./routes/user.route');
 const notFound = require('./middlewares/notFound');
 const { connectMySQL } = require('./databases/mysql');
+const User = require('./models/cassandra/User.model');
 
 const PORT = process.env.PORT;
 const limiter = rateLimit({

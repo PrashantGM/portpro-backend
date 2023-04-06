@@ -8,7 +8,7 @@ module.exports.connectDB = (url) => {
 };
 
 mongoose.connection.once('open', async () => {
-  console.log('Connected to MongoDB database');
+  console.log('Successfully connected to MongoDB database');
   let users = await User.find();
   if (users.length < 1) {
     await insertToMongo(User);

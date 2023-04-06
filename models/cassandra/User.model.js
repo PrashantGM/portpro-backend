@@ -28,13 +28,13 @@ const User = models.loadSchema('User', {
 
 User.syncDB(async (err, result) => {
   if (err) {
-    console.error('Error syncing User table', err);
+    console.error('Error syncing to Cassandra database', err);
   } else {
     let users = await User.findAsync({});
     if (users.length < 1) {
       await insertToCassandra(models, User);
     }
-    console.log('User table synced');
+    console.log('Synced to Cassandra ');
   }
 });
 
